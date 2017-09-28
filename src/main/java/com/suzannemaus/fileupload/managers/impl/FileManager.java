@@ -1,5 +1,6 @@
 package com.suzannemaus.fileupload.managers.impl;
 
+import com.suzannemaus.fileupload.engines.FileMetdadataMapperEngine;
 import com.suzannemaus.fileupload.managers.IFileManager;
 import com.suzannemaus.fileupload.models.FileMetadata;
 import com.suzannemaus.fileupload.ras.IFileMetadataResourceAccessor;
@@ -21,28 +22,37 @@ public class FileManager implements IFileManager {
     @Autowired
     private IFileMetadataResourceAccessor fileMetadataResourceAccessor;
 
+    @Override
+    public List<FileMetadata> getFileMetadata(String fileId) {
+        if(fileId == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "fileId.isNull");
+        }
+        return fileMetadataResourceAccessor.getFileMetadata(fileId);
+    }
+
     /**
      *  TODO:
-     *  Determine from Requirements where File Contents Should be Stored and What File System this
-     *  application is expected to be run on. This will determine the coding/filepaths declated for storing
-     *  the file content.
+     *  Determine from requirements where file contents should be stored and what file system this
+     *  application is expected to be run on. This will determine the coding/filepaths declared for
+     *  storing the file content.
      *
-     * @param metadataList
+     * @param metadataListAsJsonString
      * @param file
      * @return
      */
     @Override
-    public Map<String, List<FileMetadata>> uploadFileWithMetadata(List<FileMetadata> metadataList, MultipartFile file) {
+    public Map<String, List<FileMetadata>> uploadFileWithMetadata(String metadataListAsJsonString, MultipartFile file) {
 
-        // This randomUUID() method is being used until Appropriate File Saving Logic
-        //  can be determined from Requirements
+        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
+
+        // This randomUUID() method is being used as a placeholder until appropriate file saving logic
+        //  can be determined from requirements. This is where file saving implementation would be.
         String fileId = randomUUID().toString();
 
         if(fileId == null) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "fileId.isNull");
         }
 
-        // TODO: explain why file not saved here
         Map<String, List<FileMetadata>> map = new HashMap<>();
         for(FileMetadata metadata : metadataList) {
             metadata.setId(randomUUID().toString());

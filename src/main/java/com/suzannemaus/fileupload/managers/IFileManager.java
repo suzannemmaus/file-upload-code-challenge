@@ -8,6 +8,8 @@ import java.util.Map;
 
 public interface IFileManager {
 
-    Map<String, List<FileMetadata>> uploadFileWithMetadata(List<FileMetadata> metadata, MultipartFile file);
+    List<FileMetadata> getFileMetadata(String fileId);
+
+    Map<String, List<FileMetadata>> uploadFileWithMetadata(String metadataListAsJsonString, MultipartFile file);
 
 }

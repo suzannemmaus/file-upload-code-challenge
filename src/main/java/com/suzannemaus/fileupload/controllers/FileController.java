@@ -1,6 +1,6 @@
 package com.suzannemaus.fileupload.controllers;
 
-import com.suzannemaus.fileupload.managers.impl.FileManager;
+import com.suzannemaus.fileupload.managers.IFileManager;
 import com.suzannemaus.fileupload.models.FileMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,14 +15,21 @@ import java.util.Map;
 public class FileController {
 
     @Autowired
-    private FileManager fileManager;
+    private IFileManager fileManager;
+
+    @RequestMapping(value = {"metadata/{fileId}"}, method = RequestMethod.GET)
+    public ResponseEntity<List<FileMetadata>> getFileMetadata(@PathVariable("fileId") String fileId) {
+        return new ResponseEntity<List<FileMetadata>>(
+                this.fileManager.getFileMetadata(fileId), HttpStatus.OK);
+    }
 
     @RequestMapping(value = {"upload"}, method = RequestMethod.POST)
     public ResponseEntity<Map<String, List<FileMetadata>>> uploadFileWithMetadata(
-            @RequestBody List<FileMetadata> metadata,
+            @RequestParam(value = "metadata") String metadataListAsJsonString,
             @RequestParam(value = "file") MultipartFile file) {
 
-        return new ResponseEntity<>(this.fileManager.uploadFileWithMetadata(metadata, file), HttpStatus.OK);
+        return new ResponseEntity<>(
+                this.fileManager.uploadFileWithMetadata(metadataListAsJsonString, file), HttpStatus.OK);
     }
 
 }

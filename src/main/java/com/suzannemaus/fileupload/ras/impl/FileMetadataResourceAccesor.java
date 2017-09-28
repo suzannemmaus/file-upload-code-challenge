@@ -32,6 +32,7 @@ public class FileMetadataResourceAccesor implements IFileMetadataResourceAccesso
             return results;
         } catch(NullPointerException ex) {
             ex.printStackTrace();
+            logger.debug("fileId.isNull");
             return null;
         }
     }

@@ -10,9 +10,9 @@ import java.io.Serializable;
  * TODO: talk about lombok Data
  */
 
+@Data
 @Entity
 @Table(name = "file_metadata")
-@Data
 public class FileMetadata implements Serializable {
 
     private static final long serialVersionUID = 1477347578220259538L;
