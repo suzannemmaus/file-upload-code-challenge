@@ -1,5 +1,6 @@
 package com.suzannemaus.fileupload.controllers;
 
+import com.suzannemaus.fileupload.engines.FileMetdadataMapperEngine;
 import com.suzannemaus.fileupload.managers.IFileManager;
 import com.suzannemaus.fileupload.models.FileMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,29 @@ public class FileController {
                 this.fileManager.getFileMetadata(fileId), HttpStatus.OK);
     }
 
+    @RequestMapping(value = {"metadata"}, method = RequestMethod.PUT)
+    public ResponseEntity<List<FileMetadata>> updateFileMetadata(
+            @RequestParam(value = "metadata") String metadataListAsJsonString) {
+
+        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
+        return new ResponseEntity<>(
+                this.fileManager.updateFileMetadata(metadataList), HttpStatus.OK);
+    }
+
     @RequestMapping(value = {"upload"}, method = RequestMethod.POST)
     public ResponseEntity<Map<String, List<FileMetadata>>> uploadFileWithMetadata(
             @RequestParam(value = "metadata") String metadataListAsJsonString,
             @RequestParam(value = "file") MultipartFile file) {
 
+        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
         return new ResponseEntity<>(
-                this.fileManager.uploadFileWithMetadata(metadataListAsJsonString, file), HttpStatus.OK);
+                this.fileManager.uploadFileWithMetadata(metadataList, file), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"metadata/{fileId}"}, method = RequestMethod.DELETE)
+    public ResponseEntity deleteFileMetadata(@PathVariable("fileId") String fileId) {
+        this.fileManager.deleteFileMetadata(fileId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }

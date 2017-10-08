@@ -39,6 +39,23 @@ public class FileMetadataResourceAccesor implements IFileMetadataResourceAccesso
 
     @Override
     @Transactional
+    public FileMetadata updateFileMetadata(FileMetadata metadata) {
+        if (metadata == null) {
+            throw new NullPointerException("metadata.isNull");
+        }
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            metadata = (FileMetadata) session.merge(metadata);
+            return metadata;
+        } catch(NullPointerException ex) {
+            ex.printStackTrace();
+            logger.debug("metadata.isNull");
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
     public FileMetadata saveFileMetadata(FileMetadata metadata) {
         metadata.setFileId(metadata.getFileId().toLowerCase());
 
@@ -47,6 +64,13 @@ public class FileMetadataResourceAccesor implements IFileMetadataResourceAccesso
         session.save(metadata);
         session.getTransaction().commit();
         return metadata;
+    }
+
+    @Override
+    @Transactional
+    public void deleteFileMetadata(FileMetadata metadata) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(metadata);
     }
 
 }

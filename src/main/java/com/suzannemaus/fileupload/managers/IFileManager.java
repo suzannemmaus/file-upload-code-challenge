@@ -10,6 +10,10 @@ public interface IFileManager {
 
     List<FileMetadata> getFileMetadata(String fileId);
 
-    Map<String, List<FileMetadata>> uploadFileWithMetadata(String metadataListAsJsonString, MultipartFile file);
+    List<FileMetadata> updateFileMetadata(List<FileMetadata> metadata);
+
+    Map<String, List<FileMetadata>> uploadFileWithMetadata(List<FileMetadata> metadata, MultipartFile file);
+
+    void deleteFileMetadata(String fileId);
 
 }

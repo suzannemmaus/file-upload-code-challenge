@@ -8,5 +8,9 @@ public interface IFileMetadataResourceAccessor {
 
     List<FileMetadata> getFileMetadata(String fileId);
 
+    FileMetadata updateFileMetadata(FileMetadata metadata);
+
     FileMetadata saveFileMetadata(FileMetadata metadata);
+
+    void deleteFileMetadata(FileMetadata metadata);
 }
