@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,22 @@ public class FileManager implements IFileManager {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "fileId.isNull");
         }
         return fileMetadataResourceAccessor.getFileMetadata(fileId);
+    }
+
+    @Override
+    public List<FileMetadata> updateFileMetadata(String metadataListAsJsonString) {
+        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
+
+        List<FileMetadata> updatedFileMetadataList = new ArrayList<>();
+        for(FileMetadata metadata : metadataList) {
+            if(metadata.getFileId() == null) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "fileId.isNull");
+            }
+            FileMetadata updatedMetadata
+                    = fileMetadataResourceAccessor.updateFileMetadata(metadata);
+            updatedFileMetadataList.add(updatedMetadata);
+        }
+        return updatedFileMetadataList;
     }
 
     /**
@@ -62,6 +79,18 @@ public class FileManager implements IFileManager {
 
         map.put(fileId, metadataList);
         return map;
+    }
+
+    @Override
+    public void deleteFileMetadata(String fileId) {
+        if(fileId == null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "fileId.isNull");
+        }
+        List<FileMetadata> fileMetadataToBeDeleted
+                = fileMetadataResourceAccessor.getFileMetadata(fileId);
+        for(FileMetadata metadata : fileMetadataToBeDeleted) {
+            fileMetadataResourceAccessor.deleteFileMetadata(metadata);
+        }
     }
 
 }

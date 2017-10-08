@@ -23,6 +23,14 @@ public class FileController {
                 this.fileManager.getFileMetadata(fileId), HttpStatus.OK);
     }
 
+    @RequestMapping(value = {"metadata"}, method = RequestMethod.PUT)
+    public ResponseEntity<List<FileMetadata>> updateFileMetadata(
+            @RequestParam(value = "metadata") String metadataListAsJsonString) {
+
+        return new ResponseEntity<>(
+                this.fileManager.updateFileMetadata(metadataListAsJsonString), HttpStatus.OK);
+    }
+
     @RequestMapping(value = {"upload"}, method = RequestMethod.POST)
     public ResponseEntity<Map<String, List<FileMetadata>>> uploadFileWithMetadata(
             @RequestParam(value = "metadata") String metadataListAsJsonString,
@@ -30,6 +38,12 @@ public class FileController {
 
         return new ResponseEntity<>(
                 this.fileManager.uploadFileWithMetadata(metadataListAsJsonString, file), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"metadata/{fileId}"}, method = RequestMethod.DELETE)
+    public ResponseEntity deleteFileMetadata(@PathVariable("fileId") String fileId) {
+        this.fileManager.deleteFileMetadata(fileId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }
