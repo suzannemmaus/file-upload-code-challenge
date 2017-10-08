@@ -1,5 +1,6 @@
 package com.suzannemaus.fileupload.controllers;
 
+import com.suzannemaus.fileupload.engines.FileMetdadataMapperEngine;
 import com.suzannemaus.fileupload.managers.IFileManager;
 import com.suzannemaus.fileupload.models.FileMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,9 @@ public class FileController {
     public ResponseEntity<List<FileMetadata>> updateFileMetadata(
             @RequestParam(value = "metadata") String metadataListAsJsonString) {
 
+        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
         return new ResponseEntity<>(
-                this.fileManager.updateFileMetadata(metadataListAsJsonString), HttpStatus.OK);
+                this.fileManager.updateFileMetadata(metadataList), HttpStatus.OK);
     }
 
     @RequestMapping(value = {"upload"}, method = RequestMethod.POST)
@@ -36,8 +38,9 @@ public class FileController {
             @RequestParam(value = "metadata") String metadataListAsJsonString,
             @RequestParam(value = "file") MultipartFile file) {
 
+        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
         return new ResponseEntity<>(
-                this.fileManager.uploadFileWithMetadata(metadataListAsJsonString, file), HttpStatus.OK);
+                this.fileManager.uploadFileWithMetadata(metadataList, file), HttpStatus.OK);
     }
 
     @RequestMapping(value = {"metadata/{fileId}"}, method = RequestMethod.DELETE)

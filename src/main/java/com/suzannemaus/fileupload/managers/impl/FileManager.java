@@ -1,6 +1,5 @@
 package com.suzannemaus.fileupload.managers.impl;
 
-import com.suzannemaus.fileupload.engines.FileMetdadataMapperEngine;
 import com.suzannemaus.fileupload.managers.IFileManager;
 import com.suzannemaus.fileupload.models.FileMetadata;
 import com.suzannemaus.fileupload.ras.IFileMetadataResourceAccessor;
@@ -32,8 +31,7 @@ public class FileManager implements IFileManager {
     }
 
     @Override
-    public List<FileMetadata> updateFileMetadata(String metadataListAsJsonString) {
-        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
+    public List<FileMetadata> updateFileMetadata(List<FileMetadata> metadataList) {
 
         List<FileMetadata> updatedFileMetadataList = new ArrayList<>();
         for(FileMetadata metadata : metadataList) {
@@ -53,14 +51,12 @@ public class FileManager implements IFileManager {
      *  application is expected to be run on. This will determine the coding/filepaths declared for
      *  storing the file content.
      *
-     * @param metadataListAsJsonString
+     * @param metadataList
      * @param file
      * @return
      */
     @Override
-    public Map<String, List<FileMetadata>> uploadFileWithMetadata(String metadataListAsJsonString, MultipartFile file) {
-
-        List<FileMetadata> metadataList = FileMetdadataMapperEngine.mapFileMetadata(metadataListAsJsonString);
+    public Map<String, List<FileMetadata>> uploadFileWithMetadata(List<FileMetadata> metadataList, MultipartFile file) {
 
         // This randomUUID() method is being used as a placeholder until appropriate file saving logic
         //  can be determined from requirements. This is where file saving implementation would be.
